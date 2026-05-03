@@ -1,0 +1,34 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Notifications</h1>
+    <p>Browse user notifications in EventHub.</p>
+  </div>
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Title</th>
+        <th>Message</th>
+        <th>Type</th>
+        <th>Read</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @notifications.each do |notification| %>
+        <tr>
+          <td><%= link_to notification.user.name, user_path(notification.user) %></td>
+          <td><%= link_to notification.title, notification_path(notification) %></td>
+          <td><%= truncate(notification.message, length: 80) %></td>
+          <td><%= notification.notification_type %></td>
+          <td><%= notification.read ? "Yes" : "No" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <%= link_to "Back to Home", root_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  </div>
+</div>

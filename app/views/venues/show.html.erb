@@ -1,0 +1,27 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1><%= @venue.name %></h1>
+    <p>Venue details</p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>Address:</strong> <%= @venue.address %></p>
+      <p><strong>Capacity:</strong> <%= @venue.capacity %></p>
+    </div>
+  </div>
+
+  <h2>Events</h2>
+
+  <ul class="list-group mb-4">
+    <% @venue.events.each do |event| %>
+      <li class="list-group-item">
+        <%= link_to event.title, event_path(event) %>
+        -
+        <%= event.status.humanize %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to "Back to Venues", venues_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

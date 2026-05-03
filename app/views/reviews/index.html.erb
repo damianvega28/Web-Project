@@ -1,0 +1,32 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Reviews</h1>
+    <p>Browse event reviews in EventHub.</p>
+  </div>
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Event</th>
+        <th>Rating</th>
+        <th>Comment</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @reviews.each do |review| %>
+        <tr>
+          <td><%= link_to review.user.name, user_path(review.user) %></td>
+          <td><%= link_to review.event.title, event_path(review.event) %></td>
+          <td><%= review.rating %>/5</td>
+          <td><%= link_to truncate(review.comment, length: 60), review_path(review) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <%= link_to "Back to Home", root_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  </div>
+</div>

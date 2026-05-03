@@ -1,0 +1,20 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1><%= @category.name %></h1>
+    <p>Events in this category.</p>
+  </div>
+
+  <h2>Events</h2>
+
+  <ul class="list-group mb-4">
+    <% @category.events.each do |event| %>
+      <li class="list-group-item">
+        <%= link_to event.title, event_path(event) %>
+        -
+        <%= event.status.humanize %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to "Back to Categories", categories_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

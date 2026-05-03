@@ -1,0 +1,17 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Review</h1>
+    <p>Review details</p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>User:</strong> <%= link_to @review.user.name, user_path(@review.user) %></p>
+      <p><strong>Event:</strong> <%= link_to @review.event.title, event_path(@review.event) %></p>
+      <p><strong>Rating:</strong> <%= @review.rating %>/5</p>
+      <p><strong>Comment:</strong> <%= @review.comment %></p>
+    </div>
+  </div>
+
+  <%= link_to "Back to Reviews", reviews_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

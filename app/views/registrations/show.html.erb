@@ -1,0 +1,16 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Registration</h1>
+    <p>Registration details</p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>User:</strong> <%= link_to @registration.user.name, user_path(@registration.user) %></p>
+      <p><strong>Event:</strong> <%= link_to @registration.event.title, event_path(@registration.event) %></p>
+      <p><strong>Status:</strong> <%= @registration.status.humanize %></p>
+    </div>
+  </div>
+
+  <%= link_to "Back to Registrations", registrations_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

@@ -1,0 +1,17 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1><%= @notification.title %></h1>
+    <p>Notification details</p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>User:</strong> <%= link_to @notification.user.name, user_path(@notification.user) %></p>
+      <p><strong>Message:</strong> <%= @notification.message %></p>
+      <p><strong>Type:</strong> <%= @notification.notification_type %></p>
+      <p><strong>Read:</strong> <%= @notification.read ? "Yes" : "No" %></p>
+    </div>
+  </div>
+
+  <%= link_to "Back to Notifications", notifications_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

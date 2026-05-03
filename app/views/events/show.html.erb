@@ -1,0 +1,44 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1><%= @event.title %></h1>
+    <p><%= @event.status.humanize %></p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>Description:</strong> <%= @event.description %></p>
+      <p><strong>Category:</strong> <%= link_to @event.category.name, category_path(@event.category) %></p>
+      <p><strong>Venue:</strong> <%= link_to @event.venue.name, venue_path(@event.venue) %></p>
+      <p><strong>Creator:</strong> <%= link_to @event.creator.name, user_path(@event.creator) %></p>
+      <p><strong>Start date:</strong> <%= @event.start_date.strftime("%B %d, %Y %H:%M") %></p>
+      <p><strong>End date:</strong> <%= @event.end_date.strftime("%B %d, %Y %H:%M") %></p>
+      <p><strong>Capacity:</strong> <%= @event.capacity %></p>
+      <p><strong>Status:</strong> <%= @event.status.humanize %></p>
+    </div>
+  </div>
+
+  <h2>Registrations</h2>
+
+  <ul class="list-group mb-4">
+    <% @event.registrations.each do |registration| %>
+      <li class="list-group-item">
+        <%= link_to registration.user.name, user_path(registration.user) %>
+        - <%= registration.status.humanize %>
+      </li>
+    <% end %>
+  </ul>
+
+  <h2>Reviews</h2>
+
+  <ul class="list-group mb-4">
+    <% @event.reviews.each do |review| %>
+      <li class="list-group-item">
+        <strong><%= review.rating %>/5</strong> -
+        <%= review.comment %>
+        by <%= link_to review.user.name, user_path(review.user) %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to "Back to Events", events_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>

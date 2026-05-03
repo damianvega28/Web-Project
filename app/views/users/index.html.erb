@@ -1,0 +1,30 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Users</h1>
+    <p>Browse EventHub users.</p>
+  </div>
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user.name, user_path(user) %></td>
+          <td><%= user.email %></td>
+          <td><%= user.role.humanize %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <%= link_to "Back to Home", root_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  </div>
+</div>

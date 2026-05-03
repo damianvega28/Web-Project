@@ -1,0 +1,63 @@
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1><%= @user.name %></h1>
+    <p>User details</p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <p><strong>Email:</strong> <%= @user.email %></p>
+      <p><strong>Role:</strong> <%= @user.role.humanize %></p>
+    </div>
+  </div>
+
+  <h2>Organized Events</h2>
+
+  <ul class="list-group mb-4">
+    <% @user.organized_events.each do |event| %>
+      <li class="list-group-item">
+        <%= link_to event.title, event_path(event) %>
+        -
+        <%= event.status.humanize %>
+      </li>
+    <% end %>
+  </ul>
+
+  <h2>Registered Events</h2>
+
+  <ul class="list-group mb-4">
+    <% @user.events.each do |event| %>
+      <li class="list-group-item">
+        <%= link_to event.title, event_path(event) %>
+        -
+        <%= event.status.humanize %>
+      </li>
+    <% end %>
+  </ul>
+
+  <h2>Reviews</h2>
+
+  <ul class="list-group mb-4">
+    <% @user.reviews.each do |review| %>
+      <li class="list-group-item">
+        <%= link_to review.event.title, event_path(review.event) %>
+        -
+        <%= review.rating %>/5
+      </li>
+    <% end %>
+  </ul>
+
+  <h2>Notifications</h2>
+
+  <ul class="list-group mb-4">
+    <% @user.notifications.each do |notification| %>
+      <li class="list-group-item">
+        <%= link_to notification.title, notification_path(notification) %>
+        -
+        <%= notification.read ? "Read" : "Unread" %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to "Back to Users", users_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+</div>
