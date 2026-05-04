@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :reviews
   has_many :notifications
 
-  enum : role {
+  enum :role, {
     regular: 'regular',
     admin: 'admin'
   }

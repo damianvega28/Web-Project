@@ -2,7 +2,7 @@ class Notification < ApplicationRecord
   belongs_to :user
   validates :title, :message, presence: true
 
-  enum :notification_type {
+  enum :notification_type, {
     registration: 'registration',
     waitlist: 'waitlist',
     reminder: 'reminder',
