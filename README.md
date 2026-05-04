@@ -59,6 +59,35 @@ EventHub provides a centralized hub for organizing and participating in universi
 
 ---
 
+## Setup & Running the Application
+
+### Prerequisites
+- Ruby 3.x
+- Rails 8.x
+- PostgreSQL
+
+### Installation
+
+```bash
+git clone
+cd Web-Proyect-main
+
+bundle install
+yarn install
+
+cp config/database.yml.example config/database.yml
+
+rails db:create
+rails db:migrate
+rails db:seed
+
+bin/dev
+```
+
+Visit `http://localhost:3000`
+
+---
+
 ## Project Milestones
 
 | Milestone | Due Date | Weight |
