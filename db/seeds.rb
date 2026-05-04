@@ -175,3 +175,72 @@ e_cancelled = Event.create!(
 )
 
 puts "Events created: #{Event.count}"
+
+puts "Creating registrations"
+
+Registration.create!(user: pedro, event: e_completed1, status: "confirmed")
+Registration.create!(user: sofia, event: e_completed1, status: "confirmed")
+Registration.create!(user: andres, event: e_completed1, status: "confirmed")
+Registration.create!(user: valentina, event: e_completed1, status: "waiting_list")
+
+Registration.create!(user: pepe, event:e_completed2, status: "confirmed")
+Registration.create!(user: camila, event: e_completed2, status: "confirmed")
+Registration.create!(user: diego, event: e_completed2, status: "confirmed")
+Registration.create!(user: sebastian, event: e_completed2, status: "waiting_list")
+
+Registration.create!(user: pepe, event: e_completed3, status: "confirmed")
+Registration.create!(user: pedro, event: e_completed3, status: "confirmed")
+Registration.create!(user: andres, event: e_completed3, status: "confirmed")
+
+Registration.create!(user: pepe, event: e_ongoing, status: "confirmed")
+Registration.create!(user: sofia, event: e_ongoing, status: "confirmed")
+Registration.create!(user: valentina, event: e_ongoing, status: "confirmed")
+Registration.create!(user: camila, event: e_ongoing, status: "waiting_list")
+
+Registration.create!(user: pedro, event: e_published1, status: "confirmed")
+Registration.create!(user: diego, event: e_published1, status: "confirmed")
+Registration.create!(user: sebastian, event: e_published1, status: "confirmed")
+
+Registration.create!(user: pepe, event: e_published2, status: "confirmed")
+Registration.create!(user: andres, event: e_published2, status: "confirmed")
+
+Registration.create!(user: pedro, event: e_published3, status: "confirmed")
+Registration.create!(user: sofia, event: e_published3, status: "waiting_list")
+
+Registration.create!(user: camila, event: e_published4, status: "confirmed")
+Registration.create!(user: sebastian, event: e_published4, status: "confirmed")
+
+puts "Registrations created: #{Registration.count}"
+
+puts "Creating reviews"
+
+Review.create!(user: pedro, event: e_completed1, rating: 5, comment: "Excellent workshop, very hands-on and practical!")
+Review.create!(user: sofia, event: e_completed1, rating: 4, comment: "Great introduction to Rails, but could use more examples.")
+Review.create!(user: andres, event: e_completed1, rating: 4, comment: "Good content, but the pace was a bit fast for beginners.")
+
+Review.create!(user: pepe, event: e_completed2, rating: 5, comment: "Amazing tournament, great atmosphere and organization!")
+Review.create!(user: camila, event: e_completed2, rating: 3, comment: "Fun event, but the facilities could have been better.")
+Review.create!(user: diego, event: e_completed2, rating: 4, comment: "Good competition, but the scheduling was a bit rushed.")
+
+Review.create!(user: pepe, event: e_completed3, rating: 5, comment: "Beautiful performances and a wonderful cultural experience!")
+Review.create!(user: pedro, event: e_completed3, rating: 4, comment: "Great event, but the sound quality could have been better.")
+Review.create!(user: andres, event: e_completed3, rating: 3, comment: "Enjoyable evening, but the venue was a bit cramped.")
+
+puts "Reviews created: #{Review.count}"
+
+puts "Creating notifications"
+Notification.create!(user: pedro, title: "Registration Confirmed", message: "Your registration for 'Introduction to Ruby on Rails' has been confirmed.", notification_type: "registration")
+Notification.create!(user: sofia, title: "Registration Confirmed", message: "Your registration for 'Introduction to Ruby on Rails' has been confirmed.", notification_type: "registration")
+Notification.create!(user: valentina, title: "Waiting List Update", message: "You are on the waiting list for 'Introduction to Ruby on Rails'.", notification_type: "waitlist")
+Notification.create!(user: pepe, title: "Registration Confirmed", message: "Your registration for 'Interfaculty Football Tournament' has been confirmed.", notification_type: "registration")
+Notification.create!(user: camila, title: "Waiting List Update", message: "You are on the waiting list for 'Interfaculty Football Tournament'.", notification_type: "waitlist")
+Notification.create!(user: andres, title: "Event Starting Soon", message: "The AI Hackathon starts in 30 minutes. Get ready!", notification_type: "reminder")
+Notification.create!(user: sofia, title: "Event Starting Soon", message: "The AI Hackathon starts in 30 minutes. Get ready!", notification_type: "reminder")
+Notification.create!(user: pedro, title: "New Event Published", message: "A new Cybersecurity Talk has been published. Register now!", notification_type: "event")
+Notification.create!(user: diego, title: "New Event Published", message: "The Calculus Study Group is now open for registration.", notification_type: "event")
+Notification.create!(user: pepe, title: "Event Cancelled", message: "Campus Running Marathon has been cancelled due to maintenance.", notification_type: "cancellation")
+Notification.create!(user: andres, title: "Event Cancelled", message: "Campus Running Marathon has been cancelled due to maintenance.", notification_type: "cancellation")
+Notification.create!(user: admin, title: "New Review Submitted", message: "Pedro Ramirez left a 5-star review for 'Introduction to Ruby on Rails'.", notification_type: "review")
+
+puts "Notifications created: #{Notification.count}"
+puts "Seeding complete!" 
