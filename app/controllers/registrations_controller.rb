@@ -34,8 +34,14 @@ class RegistrationsController < ApplicationController
   end
 
   def destroy
-    @registration.destroy
-    redirect_to registrations_path, notice: "Registration was successfully deleted."
+    event = @registration.event
+    was_confirmed = @registration.confirmed?
+
+    @registration.update(status: "cancelled")
+
+    promote_first_waiting_registration(event) if was_confirmed
+
+    redirect_to registrations_path, notice: "Registration was successfully cancelled."
   end
 
   private
@@ -46,5 +52,14 @@ class RegistrationsController < ApplicationController
 
   def registration_params
     params.require(:registration).permit(:user_id, :event_id, :status)
+  end
+
+  def promote_first_waiting_registration(event)
+    next_registration = event.registrations
+                             .waiting_list
+                             .order(:created_at)
+                             .first
+
+    next_registration&.update(status: "confirmed")
   end
 end

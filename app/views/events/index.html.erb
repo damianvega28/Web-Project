@@ -27,7 +27,7 @@
       <% @events.each do |event| %>
         <tr>
           <td><%= link_to event.title, event_path(event) %></td>
-          <td><%= truncate(event.description, length: 80) %></td>
+          <td><%= truncate(strip_tags(event.description.to_s), length: 80) %></td>
           <td><%= event.start_date.strftime("%B %d, %Y %H:%M") %></td>
           <td><%= event.end_date.strftime("%B %d, %Y %H:%M") %></td>
           <td><%= event.capacity %></td>

@@ -1,9 +1,9 @@
 class User < ApplicationRecord
-  has_many :registrations
+  has_many :registrations, dependent: :destroy
   has_many :events, through: :registrations
-  has_many :organized_events, class_name: "Event", foreign_key: "creator_id"
-  has_many :reviews
-  has_many :notifications
+  has_many :organized_events, class_name: "Event", foreign_key: "creator_id", dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   enum :role, {
     regular: 0,

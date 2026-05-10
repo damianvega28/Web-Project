@@ -6,7 +6,12 @@
 
   <div class="card mb-4">
     <div class="card-body">
-      <p><strong>Description:</strong> <%= @event.description %></p>
+
+      <p><strong>Description:</strong></p>
+      <div class="mb-3">
+        <%= @event.description %>
+      </div>
+      
       <p><strong>Category:</strong> <%= link_to @event.category.name, category_path(@event.category) %></p>
       <p><strong>Venue:</strong> <%= link_to @event.venue.name, venue_path(@event.venue) %></p>
       <p><strong>Creator:</strong> <%= link_to @event.creator.name, user_path(@event.creator) %></p>

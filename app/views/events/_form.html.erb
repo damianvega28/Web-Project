@@ -54,7 +54,7 @@
 
   <div class="mb-3">
     <%= f.label :description, "Description", class: "form-label" %>
-    <%= f.text_area :description, class: "form-control", placeholder: "Enter event description", required: true %>
+    <%= f.rich_text_area :description, class: "form-control" %>
   </div>
 
   <%= f.submit "Save Event", class: "btn", style: "background-color: #ce0615; color: white;" %>
