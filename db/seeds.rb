@@ -31,7 +31,14 @@ pepe, pedro, sofia, andres, valentina, diego, camila, sebastian = users
 
 puts "Creating categories"
 
-categories = [ "Talk", "Wordshop", "Sports", "Social", "Study Group", "Arts & Culture"].map {|name| Category.create!(name: name)}
+categories = [
+  { name: "Talk", description: "Academic talks and lectures." },
+  { name: "Workshop", description: "Practical sessions and hands-on activities." },
+  { name: "Sports", description: "Sports and physical activities." },
+  { name: "Social", description: "Social and community events." },
+  { name: "Study Group", description: "Collaborative study sessions." },
+  { name: "Arts & Culture", description: "Artistic and cultural events." }
+].map { |attrs| Category.create!(attrs) }
 
 talk, workshop, sports, social, study, arts = categories
 

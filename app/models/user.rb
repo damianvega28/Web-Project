@@ -1,18 +1,19 @@
 class User < ApplicationRecord
   has_many :registrations
   has_many :events, through: :registrations
-  has_many :organized_events, class_name: 'Event', foreign_key: 'creator_id'
+  has_many :organized_events, class_name: "Event", foreign_key: "creator_id"
   has_many :reviews
   has_many :notifications
 
   enum :role, {
-    regular: 'regular',
-    admin: 'admin'
+    regular: 0,
+    admin: 1
   }
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 6 }
+  validates :role, presence: true
 
   before_validation :clean_data
 

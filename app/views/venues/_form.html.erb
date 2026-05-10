@@ -1,0 +1,30 @@
+<%= form_with model: @venue do |f| %>
+  <% if @venue.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>There were errors saving this venue:</h4>
+
+      <ul>
+        <% @venue.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Name", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Enter venue name", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :address, "Address", class: "form-label" %>
+    <%= f.text_field :address, class: "form-control", placeholder: "Enter venue address", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :capacity, "Capacity", class: "form-label" %>
+    <%= f.number_field :capacity, class: "form-control", placeholder: "Enter venue capacity", required: true, min: 1 %>
+  </div>
+
+  <%= f.submit "Save Venue", class: "btn", style: "background-color: #ce0615; color: white;" %>
+<% end %>

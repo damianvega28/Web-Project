@@ -12,5 +12,15 @@
     </div>
   </div>
 
-  <%= link_to "Back to Registrations", registrations_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  <div class="d-flex gap-2 mt-4">
+    <%= link_to "Edit Registration", edit_registration_path(@registration), class: "btn btn-secondary" %>
+
+    <%= button_to "Delete Registration",
+                  registration_path(@registration),
+                  method: :delete,
+                  class: "btn btn-danger",
+                  data: { turbo_confirm: "Are you sure you want to delete this registration?" } %>
+
+    <%= link_to "Back to Registrations", registrations_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  </div>
 </div>

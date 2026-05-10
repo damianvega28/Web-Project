@@ -5,10 +5,22 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   resources :users, only: [:index, :show]
-  resources :events, only: [:index, :show]
-  resources :categories, only: [:index, :show]
-  resources :venues, only: [:index, :show]
-  resources :registrations, only: [:index, :show]
-  resources :reviews, only: [:index, :show]
-  resources :notifications, only: [:index, :show]
+
+  resources :events do
+    member do
+      patch :publish
+      patch :cancel
+    end
+  end
+
+  resources :categories
+  resources :venues
+  resources :registrations
+  resources :reviews
+
+  resources :notifications do
+    member do
+      patch :mark_as_read
+    end
+  end
 end

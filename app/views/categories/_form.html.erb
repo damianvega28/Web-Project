@@ -1,0 +1,25 @@
+<%= form_with model: @category do |f| %>
+  <% if @category.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>There were errors saving this category:</h4>
+
+      <ul>
+        <% @category.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Name", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Enter category name", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :description, "Description", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", placeholder: "Enter category description", required: true %>
+  </div>
+
+  <%= f.submit "Save Category", class: "btn btn-primary" %>
+<% end %>
