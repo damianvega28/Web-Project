@@ -51,13 +51,13 @@ class RegistrationsController < ApplicationController
   end
 
   def registration_params
-    params.require(:registration).permit(:user_id, :event_id, :status)
+    params.require(:registration).permit(:user_id, :event_id)
   end
 
   def promote_first_waiting_registration(event)
     next_registration = event.registrations
                              .waiting_list
-                             .order(:created_at)
+                             .order(:registered_at)
                              .first
 
     next_registration&.update(status: "confirmed")

@@ -39,13 +39,21 @@ class EventsController < ApplicationController
   end
 
   def publish
-    @event.update(status: "published")
-    redirect_to event_path(@event), notice: "Event was successfully published."
+    if @event.draft?
+      @event.update(status: "published")
+      redirect_to event_path(@event), notice: "Event was successfully published."
+    else
+      redirect_to event_path(@event), alert: "Only draft events can be published."
+    end
   end
 
   def cancel
-    @event.update(status: "cancelled")
-    redirect_to event_path(@event), notice: "Event was successfully cancelled."
+    if @event.draft? || @event.published?
+      @event.update(status: "cancelled")
+      redirect_to event_path(@event), notice: "Event was successfully cancelled."
+    else
+      redirect_to event_path(@event), alert: "Only draft or published events can be cancelled."
+    end
   end
 
   private
@@ -61,7 +69,6 @@ class EventsController < ApplicationController
       :start_date,
       :end_date,
       :capacity,
-      :status,
       :creator_id,
       :category_id,
       :venue_id

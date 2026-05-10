@@ -16,9 +16,9 @@ class ReviewsController < ApplicationController
     @review = Review.new(review_params)
 
     if @review.save
-      redirect_to review_path(@review), notice: "Review was successfully created."
+      redirect_to event_path(@review.event), notice: "Review was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      redirect_to event_path(@review.event), alert: @review.errors.full_messages.to_sentence
     end
   end
 

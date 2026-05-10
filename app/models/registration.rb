@@ -11,18 +11,23 @@ class Registration < ApplicationRecord
   validates :status, presence: true
   validates :user_id, uniqueness: { scope: :event_id }
 
-  before_validation :set_default_status, on: :create
+  validate :event_must_be_published, on: :create
+
+  before_validation :set_registered_at, on: :create
+  before_validation :assign_status, on: :create
 
   private
 
-  def set_default_status
-    return if status.present?
-    return unless event.present?
+  def event_must_be_published
+    return if event.present? && event.published?
 
-    if event.status != "published"
-      errors.add(:event, "is not open for registration")
-      return
-    end
+    errors.add(:event, "is not open for registration")
+  end
+
+  def assign_status
+    return unless event.present?
+    return unless event.published?
+    return if cancelled?
 
     confirmed_count = event.registrations.confirmed.count
 
@@ -31,5 +36,9 @@ class Registration < ApplicationRecord
                   else
                     "waiting_list"
                   end
+  end
+
+  def set_registered_at
+    self.registered_at ||= Time.current if respond_to?(:registered_at)
   end
 end

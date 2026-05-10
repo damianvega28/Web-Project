@@ -25,13 +25,5 @@
         { class: "form-select", required: true } %>
   </div>
 
-  <div class="mb-3">
-    <%= f.label :status, "Status", class: "form-label" %>
-    <%= f.select :status,
-        ["confirmed", "waiting_list", "cancelled"],
-        { prompt: "Select status" },
-        { class: "form-select", required: true } %>
-  </div>
-
   <%= f.submit "Save Registration", class: "btn", style: "background-color: #ce0615; color: white;" %>
 <% end %>

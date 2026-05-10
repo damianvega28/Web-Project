@@ -18,7 +18,7 @@ class Review < ApplicationRecord
   private
 
   def event_must_be_completed
-    return if event.present? && event.status == "completed"
+    return if event.present? && event.completed?
 
     errors.add(:event, "must be completed before it can be reviewed")
   end
