@@ -16,9 +16,9 @@ class RegistrationsController < ApplicationController
     @registration = Registration.new(registration_params)
 
     if @registration.save
-      redirect_to registration_path(@registration), notice: "Registration was successfully created."
+      redirect_to registration_path(@registration.event), notice: "Registration was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      redirect_to event_path(Event.find(registration_params[:event_id])), alert: @registration.errors.full_messages.to_sentence
     end
   end
 
@@ -41,7 +41,7 @@ class RegistrationsController < ApplicationController
 
     promote_first_waiting_registration(event) if was_confirmed
 
-    redirect_to registrations_path, notice: "Registration was successfully cancelled."
+    redirect_to event_path(event), notice: "Registration was successfully cancelled."
   end
 
   private

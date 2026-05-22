@@ -24,27 +24,38 @@
     </div>
   </div>
 
-  <div class="card mb-4">
-    <div class="card-body">
-      <h2>Registration</h2>
+<div class="card mb-4">
+  <div class="card-body">
+    <h2>Registration</h2>
 
-      <% if @event.open_for_registration? %>
-        <%= button_to "Register for this Event",
-                      registrations_path(registration: { event_id: @event.id, user_id: User.first.id }),
-                      method: :post,
-                      class: "btn",
-                      style: "background-color: #ce0615; color: white;" %>
+    <% if @event.open_for_registration? %>
+      <%= form_with url: registrations_path, method: :post do |f| %>
+        <%= f.hidden_field :event_id, value: @event.id, name: "registration[event_id]" %>
 
-        <% if @event.full? %>
-          <p class="mt-2 text-warning">This event is full. New registrations will be added to the waiting list.</p>
-        <% end %>
-      <% else %>
-        <div class="alert alert-warning">
-          This event is not open for registration.
+        <div class="mb-3">
+          <%= f.label :user_id, "User", class: "form-label" %>
+          <%= f.collection_select :user_id, User.all, :id, :name,
+              { prompt: "Select a user" },
+              { class: "form-select", required: true,
+                name: "registration[user_id]" } %>
         </div>
+
+        <%= f.submit "Register for this Event", class: "btn",
+            style: "background-color: #ce0615; color: white;" %>
       <% end %>
-    </div>
+
+      <% if @event.full? %>
+        <p class="mt-2 text-warning">
+          This event is full. New registrations will be added to the waiting list.
+        </p>
+      <% end %>
+    <% else %>
+      <div class="alert alert-warning">
+        This event is not open for registration.
+      </div>
+    <% end %>
   </div>
+</div>
 
   <h2>Registrations</h2>
 

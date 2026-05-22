@@ -17,8 +17,16 @@ class User < ApplicationRecord
 
   before_validation :clean_data
 
+  before_validation :set_default_role
+
   def clean_data
     self.name = name.strip.titleize if name.present?
     self.email = email.strip.downcase if email.present?
+  end
+
+  private
+
+  def set_default_role
+    self.role ||= :regular
   end
 end
