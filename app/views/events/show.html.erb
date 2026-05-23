@@ -8,8 +8,8 @@
     <div class="card-body">
 
       <p><strong>Description:</strong></p>
-      <div class="mb-3">
-        <%= @event.description %>
+      <div class="trix-content">
+        <%= @event.description.body %>
       </div>
 
       <p><strong>Category:</strong> <%= link_to @event.category.name, category_path(@event.category) %></p>
