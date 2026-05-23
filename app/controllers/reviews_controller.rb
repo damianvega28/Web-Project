@@ -27,15 +27,16 @@ class ReviewsController < ApplicationController
 
   def update
     if @review.update(review_params)
-      redirect_to review_path(@review), notice: "Review was successfully updated."
+      redirect_to event_path(@review.event), notice: "Review was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    event = @review.event
     @review.destroy
-    redirect_to reviews_path, notice: "Review was successfully deleted."
+    redirect_to event_path(event), notice: "Review was successfully deleted."
   end
 
   private
