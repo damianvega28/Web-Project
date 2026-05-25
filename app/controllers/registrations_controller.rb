@@ -18,7 +18,7 @@ class RegistrationsController < ApplicationController
     if @registration.save
       redirect_to event_path(@registration.event), notice: "Registration was successfully created."
     else
-      redirect_to event_path(Event.find(registration_params[:event_id])), alert: @registration.errors.full_messages.to_sentence
+      redirect_to event_path(@registration.event), alert: @registration.errors.full_messages.to_sentence
     end
   end
 
@@ -35,11 +35,8 @@ class RegistrationsController < ApplicationController
 
   def destroy
     event = @registration.event
-    was_confirmed = @registration.confirmed?
 
-    @registration.update(status: "cancelled")
-
-    promote_first_waiting_registration(event) if was_confirmed
+    @registration.cancel!
 
     redirect_to event_path(event), notice: "Registration was successfully cancelled."
   end
@@ -52,14 +49,5 @@ class RegistrationsController < ApplicationController
 
   def registration_params
     params.require(:registration).permit(:user_id, :event_id)
-  end
-
-  def promote_first_waiting_registration(event)
-    next_registration = event.registrations
-                             .waiting_list
-                             .order(:registered_at)
-                             .first
-
-    next_registration&.update(status: "confirmed")
   end
 end

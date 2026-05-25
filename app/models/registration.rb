@@ -16,6 +16,14 @@ class Registration < ApplicationRecord
   before_validation :set_registered_at, on: :create
   before_validation :assign_status, on: :create
 
+  def cancel!
+    was_confirmed = confirmed?
+
+    update!(status: "cancelled")
+
+    promote_first_waiting_list_registration if was_confirmed
+  end
+
   private
 
   def event_must_be_published
@@ -27,7 +35,6 @@ class Registration < ApplicationRecord
   def assign_status
     return unless event.present?
     return unless event.published?
-    return if cancelled?
 
     confirmed_count = event.registrations.confirmed.count
 
@@ -39,6 +46,15 @@ class Registration < ApplicationRecord
   end
 
   def set_registered_at
-    self.registered_at ||= Time.current if respond_to?(:registered_at)
+    self.registered_at ||= Time.current
+  end
+
+  def promote_first_waiting_list_registration
+    next_registration = event.registrations
+                             .waiting_list
+                             .order(:registered_at)
+                             .first
+
+    next_registration&.update!(status: "confirmed")
   end
 end
