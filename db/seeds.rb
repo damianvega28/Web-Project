@@ -11,7 +11,21 @@ User.destroy_all
 
 puts "Creating users"
 
-admin = User.create!(name: "Main Admin", email: "admin@eventhub.com", password: "password123", role: "admin")
+admin = User.create!(
+  name: "Admin User",
+  email: "admin@eventhub.com",
+  password: "password123",
+  password_confirmation: "password123",
+  role: :admin
+)
+
+user = User.create!(
+  name: "Regular User",
+  email: "user@eventhub.com",
+  password: "password123",
+  password_confirmation: "password123",
+  role: :regular
+)
 
 users = [
     {name: "Pepe Pepito",      email: "pepe@miuandes.cl"},

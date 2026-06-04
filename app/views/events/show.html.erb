@@ -1,6 +1,7 @@
 <div class="container my-5">
   <div class="text-center mb-4">
     <h1><%= @event.title %></h1>
+
     <%
       badge_class = case @event.status
       when "draft"      then "bg-secondary"
@@ -10,13 +11,14 @@
       when "cancelled"  then "bg-danger"
       end
     %>
+
     <span class="badge <%= badge_class %> fs-6"><%= @event.status.humanize %></span>
   </div>
 
   <div class="card mb-4">
     <div class="card-body">
-
       <p><strong>Description:</strong></p>
+
       <div class="trix-content mb-3">
         <%= @event.description.body %>
       </div>
@@ -32,42 +34,41 @@
     </div>
   </div>
 
-<div class="card mb-4">
-  <div class="card-body">
-    <h2>Registration</h2>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2>Registration</h2>
 
-    <% if @event.open_for_registration? %>
-      <% if @event.full? %>
-        <div class="alert alert-warning">
-          This event is <strong>full</strong>. New registrations will be added to the <strong>waiting list</strong>.
-        </div>
+      <% if @event.open_for_registration? %>
+        <% if @event.full? %>
+          <div class="alert alert-warning">
+            This event is <strong>full</strong>. New registrations will be added to the <strong>waiting list</strong>.
+          </div>
+        <% else %>
+          <div class="alert alert-success">
+            <%= @event.available_spots %> spot(s) available.
+          </div>
+        <% end %>
+
+        <% if user_signed_in? && policy(Registration.new(event: @event)).new? %>
+          <%= form_with url: registrations_path, method: :post do |f| %>
+            <%= f.hidden_field :event_id, value: @event.id, name: "registration[event_id]" %>
+
+            <%= f.submit "Register for this Event",
+                class: "btn",
+                style: "background-color: #ce0615; color: white;" %>
+          <% end %>
+        <% elsif !user_signed_in? %>
+          <p>
+            <%= link_to "Log in", new_user_session_path %> to register for this event.
+          </p>
+        <% end %>
       <% else %>
-        <div class="alert alert-success">
-          <%= @event.available_spots %> spot(s) available.
+        <div class="alert alert-warning">
+          This event is not open for registration.
         </div>
       <% end %>
-
-      <%= form_with url: registrations_path, method: :post do |f| %>
-        <%= f.hidden_field :event_id, value: @event.id, name: "registration[event_id]" %>
-
-        <div class="mb-3">
-          <%= f.label :user_id, "User", class: "form-label" %>
-          <%= f.collection_select :user_id, User.all, :id, :name,
-              { prompt: "Select a user" },
-              { class: "form-select", required: true,
-                name: "registration[user_id]" } %>
-        </div>
-
-        <%= f.submit "Register for this Event", class: "btn",
-            style: "background-color: #ce0615; color: white;" %>
-      <% end %>
-    <% else %>
-      <div class="alert alert-warning">
-        This event is not open for registration.
-      </div>
-    <% end %>
+    </div>
   </div>
-</div>
 
   <h2>Registrations</h2>
 
@@ -75,17 +76,17 @@
     <% @event.registrations.each do |registration| %>
       <li class="list-group-item d-flex justify-content-between align-items-center">
         <span>
-          <%= link_to registration.user.name, user_path(registration.user) %>
+          <%= registration.user.name %>
           —
           <%= registration.status.humanize %>
         </span>
 
-        <% unless registration.cancelled? %>
+        <% if !registration.cancelled? && policy(registration).destroy? %>
           <%= button_to "Cancel Registration",
-                        registration_path(registration),
-                        method: :delete,
-                        class: "btn btn-sm btn-warning",
-                        data: { turbo_confirm: "Are you sure you want to cancel this registration?" } %>
+              registration_path(registration),
+              method: :delete,
+              class: "btn btn-sm btn-warning",
+              form: { data: { turbo_confirm: "Are you sure you want to cancel this registration?" } } %>
         <% end %>
       </li>
     <% end %>
@@ -95,45 +96,63 @@
 
   <ul class="list-group mb-4">
     <% @event.reviews.each do |review| %>
-      <li class="list-group-item">
-        <strong><%= review.rating %>/5</strong> —
-        <%= review.comment %>
-        by <%= link_to review.user.name, user_path(review.user) %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          <strong><%= review.rating %>/5</strong>
+          —
+          <%= review.comment %>
+          by <%= review.user.name %>
+        </span>
+
+        <% if policy(review).destroy? %>
+          <%= button_to "Delete Review",
+              review_path(review),
+              method: :delete,
+              class: "btn btn-sm btn-danger",
+              form: { data: { turbo_confirm: "Are you sure?" } } %>
+        <% end %>
       </li>
     <% end %>
   </ul>
 
   <% if @event.completed? %>
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3>Write a Review</h3>
+    <% if user_signed_in? && policy(Review.new(event: @event)).new? %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Write a Review</h3>
 
-        <%= form_with model: Review.new do |f| %>
-          <%= f.hidden_field :event_id, value: @event.id %>
+          <%= form_with model: Review.new do |f| %>
+            <%= f.hidden_field :event_id, value: @event.id %>
 
-          <div class="mb-3">
-            <%= f.label :user_id, "User", class: "form-label" %>
-            <%= f.collection_select :user_id, User.all, :id, :name,
-                { prompt: "Select a user" },
-                { class: "form-select", required: true } %>
-          </div>
+            <div class="mb-3">
+              <%= f.label :rating, "Rating", class: "form-label" %>
+              <%= f.number_field :rating,
+                  class: "form-control",
+                  min: 1,
+                  max: 5,
+                  required: true,
+                  placeholder: "Enter a rating from 1 to 5" %>
+            </div>
 
-          <div class="mb-3">
-            <%= f.label :rating, "Rating", class: "form-label" %>
-            <%= f.number_field :rating, class: "form-control", min: 1, max: 5, required: true,
-                placeholder: "Enter a rating from 1 to 5" %>
-          </div>
+            <div class="mb-3">
+              <%= f.label :comment, "Comment", class: "form-label" %>
+              <%= f.text_area :comment,
+                  class: "form-control",
+                  required: true,
+                  placeholder: "Write your review here..." %>
+            </div>
 
-          <div class="mb-3">
-            <%= f.label :comment, "Comment", class: "form-label" %>
-            <%= f.text_area :comment, class: "form-control", required: true,
-                placeholder: "Write your review here..." %>
-          </div>
-
-          <%= f.submit "Submit Review", class: "btn", style: "background-color: #ce0615; color: white;" %>
-        <% end %>
+            <%= f.submit "Submit Review",
+                class: "btn",
+                style: "background-color: #ce0615; color: white;" %>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% elsif !user_signed_in? %>
+      <div class="alert alert-info">
+        Log in to submit a review.
+      </div>
+    <% end %>
   <% else %>
     <div class="alert alert-info">
       Reviews can only be submitted after the event is completed.
@@ -141,30 +160,36 @@
   <% end %>
 
   <div class="d-flex gap-2 mt-4">
-    <%= link_to "Edit Event", edit_event_path(@event), class: "btn btn-secondary" %>
+    <% if policy(@event).edit? %>
+      <%= link_to "Edit Event", edit_event_path(@event), class: "btn btn-secondary" %>
+    <% end %>
 
-    <% if @event.draft? %>
+    <% if @event.draft? && policy(@event).publish? %>
       <%= button_to "Publish Event",
-                    publish_event_path(@event),
-                    method: :patch,
-                    class: "btn btn-success" %>
+          publish_event_path(@event),
+          method: :patch,
+          class: "btn btn-success" %>
     <% end %>
 
-    <% if @event.draft? || @event.published? %>
+    <% if (@event.draft? || @event.published?) && policy(@event).cancel? %>
       <%= button_to "Cancel Event",
-                    cancel_event_path(@event),
-                    method: :patch,
-                    class: "btn btn-warning",
-                    data: { turbo_confirm: "Are you sure you want to cancel this event?" } %>
+          cancel_event_path(@event),
+          method: :patch,
+          class: "btn btn-warning",
+          form: { data: { turbo_confirm: "Are you sure you want to cancel this event?" } } %>
     <% end %>
 
-    <%= button_to "Delete Event",
-                  event_path(@event),
-                  method: :delete,
-                  class: "btn btn-danger",
-                  data: { turbo_confirm: "Are you sure you want to delete this event?" } %>
+    <% if policy(@event).destroy? %>
+      <%= button_to "Delete Event",
+          event_path(@event),
+          method: :delete,
+          class: "btn btn-danger",
+          form: { data: { turbo_confirm: "Are you sure you want to delete this event?" } } %>
+    <% end %>
 
-    <%= link_to "Back to Events", events_path, class: "btn",
+    <%= link_to "Back to Events",
+        events_path,
+        class: "btn",
         style: "background-color: #ce0615; color: white;" %>
   </div>
 </div>

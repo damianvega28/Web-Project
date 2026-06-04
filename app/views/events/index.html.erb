@@ -5,8 +5,12 @@
   </div>
 
   <div class="mb-3">
-    <%= link_to "New Event", new_event_path, class: "btn",
-        style: "background-color: #ce0615; color: white;" %>
+    <% if policy(Event).new? %>
+      <%= link_to "New Event",
+          new_event_path,
+          class: "btn",
+          style: "background-color: #ce0615; color: white;" %>
+    <% end %>
   </div>
 
   <table class="table table-striped table-bordered">
@@ -21,6 +25,7 @@
         <th>Category</th>
         <th>Venue</th>
         <th>Creator</th>
+        <th>Actions</th>
       </tr>
     </thead>
 
@@ -35,6 +40,7 @@
           when "cancelled"  then "bg-danger"
           end
         %>
+
         <tr>
           <td><%= link_to event.title, event_path(event) %></td>
           <td><%= truncate(strip_tags(event.description.to_s), length: 80) %></td>
@@ -45,13 +51,33 @@
           <td><%= event.category.name %></td>
           <td><%= event.venue.name %></td>
           <td><%= event.creator.name %></td>
+
+          <td>
+            <div class="d-flex gap-2">
+              <% if policy(event).edit? %>
+                <%= link_to "Edit",
+                    edit_event_path(event),
+                    class: "btn btn-sm btn-secondary" %>
+              <% end %>
+
+              <% if policy(event).destroy? %>
+                <%= button_to "Delete",
+                    event_path(event),
+                    method: :delete,
+                    form: { data: { turbo_confirm: "Are you sure?" } },
+                    class: "btn btn-sm btn-danger" %>
+              <% end %>
+            </div>
+          </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
   <div class="mt-4">
-    <%= link_to "Back to Home", root_path, class: "btn",
+    <%= link_to "Back to Home",
+        root_path,
+        class: "btn",
         style: "background-color: #ce0615; color: white;" %>
   </div>
 </div>

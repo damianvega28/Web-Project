@@ -1,20 +1,24 @@
 class CategoriesController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_category, only: [:show, :edit, :update, :destroy]
 
   def index
-    @categories = Category.all
+    @categories = policy_scope(Category)
   end
 
   def show
+    authorize @category
     @events = @category.events
   end
 
   def new
     @category = Category.new
+    authorize @category
   end
 
   def create
     @category = Category.new(category_params)
+    authorize @category
 
     if @category.save
       redirect_to category_path(@category), notice: "Category was successfully created."
@@ -24,9 +28,12 @@ class CategoriesController < ApplicationController
   end
 
   def edit
+    authorize @category
   end
 
   def update
+    authorize @category
+
     if @category.update(category_params)
       redirect_to category_path(@category), notice: "Category was successfully updated."
     else
@@ -35,6 +42,8 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
+    authorize @category
+
     @category.destroy
     redirect_to categories_path, notice: "Category was successfully deleted."
   end
@@ -46,6 +55,6 @@ class CategoriesController < ApplicationController
   end
 
   def category_params
-    params.require(:category).permit(:name, :description)
+    params.require(:category).permit(policy(@category || Category).permitted_attributes)
   end
 end

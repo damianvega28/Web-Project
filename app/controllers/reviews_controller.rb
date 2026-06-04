@@ -1,19 +1,25 @@
 class ReviewsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_review, only: [:show, :edit, :update, :destroy]
 
   def index
-    @reviews = Review.all
+    @reviews = policy_scope(Review)
   end
 
   def show
+    authorize @review
   end
 
   def new
-    @review = Review.new
+    @review = Review.new(event_id: params[:event_id])
+    authorize @review
   end
 
   def create
     @review = Review.new(review_params)
+    @review.user = current_user
+
+    authorize @review
 
     if @review.save
       redirect_to event_path(@review.event), notice: "Review was successfully created."
@@ -23,9 +29,12 @@ class ReviewsController < ApplicationController
   end
 
   def edit
+    authorize @review
   end
 
   def update
+    authorize @review
+
     if @review.update(review_params)
       redirect_to event_path(@review.event), notice: "Review was successfully updated."
     else
@@ -34,6 +43,8 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
+    authorize @review
+
     event = @review.event
     @review.destroy
     redirect_to event_path(event), notice: "Review was successfully deleted."
@@ -46,6 +57,6 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:user_id, :event_id, :rating, :comment)
+    params.require(:review).permit(policy(@review || Review).permitted_attributes)
   end
 end

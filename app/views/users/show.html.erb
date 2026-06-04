@@ -15,11 +15,13 @@
 
   <ul class="list-group mb-4">
     <% @user.organized_events.each do |event| %>
-      <li class="list-group-item">
-        <%= link_to event.title, event_path(event) %>
-        -
-        <%= event.status.humanize %>
-      </li>
+      <% if policy(event).show? %>
+        <li class="list-group-item">
+          <%= link_to event.title, event_path(event) %>
+          -
+          <%= event.status.humanize %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
@@ -27,11 +29,13 @@
 
   <ul class="list-group mb-4">
     <% @user.events.each do |event| %>
-      <li class="list-group-item">
-        <%= link_to event.title, event_path(event) %>
-        -
-        <%= event.status.humanize %>
-      </li>
+      <% if policy(event).show? %>
+        <li class="list-group-item">
+          <%= link_to event.title, event_path(event) %>
+          -
+          <%= event.status.humanize %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
@@ -39,11 +43,23 @@
 
   <ul class="list-group mb-4">
     <% @user.reviews.each do |review| %>
-      <li class="list-group-item">
-        <%= link_to review.event.title, event_path(review.event) %>
-        -
-        <%= review.rating %>/5
-      </li>
+      <% if policy(review).show? %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <%= link_to review.event.title, event_path(review.event) %>
+            -
+            <%= review.rating %>/5
+          </span>
+
+          <% if policy(review).destroy? %>
+            <%= button_to "Delete Review",
+                review_path(review),
+                method: :delete,
+                class: "btn btn-sm btn-danger",
+                form: { data: { turbo_confirm: "Are you sure?" } } %>
+          <% end %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
@@ -51,13 +67,34 @@
 
   <ul class="list-group mb-4">
     <% @user.notifications.each do |notification| %>
-      <li class="list-group-item">
-        <%= link_to notification.title, notification_path(notification) %>
-        -
-        <%= notification.read ? "Read" : "Unread" %>
-      </li>
+      <% if policy(notification).show? %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <%= link_to notification.title, notification_path(notification) %>
+            -
+            <%= notification.read ? "Read" : "Unread" %>
+          </span>
+
+          <% if !notification.read && policy(notification).update? %>
+            <%= button_to "Mark as read",
+                mark_as_read_notification_path(notification),
+                method: :patch,
+                class: "btn btn-sm btn-success" %>
+          <% end %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
-  <%= link_to "Back to Users", users_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+  <% if policy(User).index? %>
+    <%= link_to "Back to Users",
+        users_path,
+        class: "btn",
+        style: "background-color: #ce0615; color: white;" %>
+  <% else %>
+    <%= link_to "Back to Home",
+        root_path,
+        class: "btn",
+        style: "background-color: #ce0615; color: white;" %>
+  <% end %>
 </div>

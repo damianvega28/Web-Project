@@ -15,23 +15,34 @@
 
   <ul class="list-group mb-4">
     <% @venue.events.each do |event| %>
-      <li class="list-group-item">
-        <%= link_to event.title, event_path(event) %>
-        -
-        <%= event.status.humanize %>
-      </li>
+      <% if policy(event).show? %>
+        <li class="list-group-item">
+          <%= link_to event.title, event_path(event) %>
+          -
+          <%= event.status.humanize %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
   <div class="d-flex gap-2 mt-4">
-    <%= link_to "Edit Venue", edit_venue_path(@venue), class: "btn btn-secondary" %>
+    <% if policy(@venue).edit? %>
+      <%= link_to "Edit Venue",
+          edit_venue_path(@venue),
+          class: "btn btn-secondary" %>
+    <% end %>
 
-    <%= button_to "Delete Venue",
-                  venue_path(@venue),
-                  method: :delete,
-                  class: "btn btn-danger",
-                  data: { turbo_confirm: "Are you sure you want to delete this venue?" } %>
+    <% if policy(@venue).destroy? %>
+      <%= button_to "Delete Venue",
+          venue_path(@venue),
+          method: :delete,
+          class: "btn btn-danger",
+          form: { data: { turbo_confirm: "Are you sure you want to delete this venue?" } } %>
+    <% end %>
 
-    <%= link_to "Back to Venues", venues_path, class: "btn", style: "background-color: #ce0615; color: white;" %>
+    <%= link_to "Back to Venues",
+        venues_path,
+        class: "btn",
+        style: "background-color: #ce0615; color: white;" %>
   </div>
 </div>
