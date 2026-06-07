@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get "pages/home"
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :edit, :update]
 
   resources :events do
     member do
