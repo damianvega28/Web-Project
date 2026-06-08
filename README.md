@@ -38,12 +38,32 @@ EventHub provides a centralized hub for organizing and participating in universi
 
 ---
 
-## Roles
+## Roles & Permissions
 
-| Role | Permissions |
-|---|---|
-| **Regular User** | Create events, register, leave reviews, manage own events |
-| **Administrator** | All user permissions + moderate events, manage venues, categories, and users |
+| Action | Regular User | Admin |
+|---|---|---|
+| Browse events, venues, categories | Yes | Yes |
+| Create events | Yes | Yes |
+| Edit / cancel own events | Yes | Yes |
+| Edit / cancel any event | No | Yes |
+| Register for events | Yes | Yes |
+| Cancel own registration | Yes | Yes |
+| Review attended events | Yes | Yes |
+| Delete any review | No | Yes |
+| Manage categories | No | Yes |
+| Manage venues | No | Yes |
+| Manage users | No | Yes |
+
+---
+
+## Test Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@eventhub.com | password123 |
+| Regular User | user@eventhub.com | password123 |
+| Regular User | pepe@miuandes.cl | password123 |
+| Regular User | pedro@miuandes.cl | password123 |
 
 ---
 
@@ -52,30 +72,31 @@ EventHub provides a centralized hub for organizing and participating in universi
 - **Framework:** Ruby on Rails 8 (MVC)
 - **Database:** PostgreSQL
 - **Views:** ERB templates
-- **Styling:** Bootstrap (responsive)
+- **Styling:** Bootstrap 5
 - **Rich Text:** ActionText
 - **Authentication:** Devise
-- **Authorization:** CanCanCan
+- **Authorization:** Pundit
 
 ---
 
 ## Setup & Running the Application
 
 ### Prerequisites
-- Ruby 3.x
-- Rails 8.x
+
+- Ruby 4.0.0
+- Rails 8.1.x
 - PostgreSQL
+- Node.js 20.x
+- Yarn
 
 ### Installation
 
 ```bash
-git clone
+git clone <repository-url>
 cd Web-Proyect-main
 
 bundle install
 yarn install
-
-cp config/database.yml.example config/database.yml
 
 rails db:create
 rails db:migrate
