@@ -21,9 +21,16 @@
           <td><%= user.email %></td>
           <td><%= user.role&.humanize %></td>
           <td>
-            <% if policy(user).show? %>
-              <%= link_to "Show",
-                  user_path(user),
+            <div class="d-flex gap-2">
+              <% if policy(user).show? %>
+                <%= link_to "Show",
+                    user_path(user),
+                    class: "btn btn-sm btn-secondary" %>
+              <% end %>
+
+            <% if policy(user).update? %>
+              <%= link_to "Edit",
+                  edit_user_path(user),
                   class: "btn btn-sm btn-secondary" %>
             <% end %>
           </td>
