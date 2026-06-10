@@ -13,13 +13,18 @@
     <% end %>
   </div>
 
+  <% show_actions = @venues.any? { |venue| policy(venue).edit? || policy(venue).destroy? } %>
+
   <table class="table table-striped table-bordered">
     <thead>
       <tr>
         <th>Name</th>
         <th>Address</th>
         <th>Capacity</th>
-        <th>Actions</th>
+
+        <% if show_actions %>
+          <th>Actions</th>
+        <% end %>
       </tr>
     </thead>
 
@@ -29,23 +34,26 @@
           <td><%= link_to venue.name, venue_path(venue) %></td>
           <td><%= venue.address %></td>
           <td><%= venue.capacity %></td>
-          <td>
-            <div class="d-flex gap-2">
-              <% if policy(venue).edit? %>
-                <%= link_to "Edit",
-                    edit_venue_path(venue),
-                    class: "btn btn-sm btn-secondary" %>
-              <% end %>
 
-              <% if policy(venue).destroy? %>
-                <%= button_to "Delete",
-                    venue_path(venue),
-                    method: :delete,
-                    class: "btn btn-sm btn-danger",
-                    form: { data: { turbo_confirm: "Are you sure?" } } %>
-              <% end %>
-            </div>
-          </td>
+          <% if show_actions %>
+            <td>
+              <div class="d-flex gap-2">
+                <% if policy(venue).edit? %>
+                  <%= link_to "Edit",
+                      edit_venue_path(venue),
+                      class: "btn btn-sm btn-secondary" %>
+                <% end %>
+
+                <% if policy(venue).destroy? %>
+                  <%= button_to "Delete",
+                      venue_path(venue),
+                      method: :delete,
+                      class: "btn btn-sm btn-danger",
+                      form: { data: { turbo_confirm: "Are you sure?" } } %>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

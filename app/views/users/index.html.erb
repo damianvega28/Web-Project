@@ -28,11 +28,12 @@
                     class: "btn btn-sm btn-secondary" %>
               <% end %>
 
-            <% if policy(user).update? %>
-              <%= link_to "Edit",
-                  edit_user_path(user),
-                  class: "btn btn-sm btn-secondary" %>
-            <% end %>
+              <% if policy(user).update? %>
+                <%= link_to "Edit",
+                    edit_user_path(user),
+                    class: "btn btn-sm btn-secondary" %>
+              <% end %>
+            </div>
           </td>
         </tr>
       <% end %>

@@ -25,7 +25,10 @@
         <th>Category</th>
         <th>Venue</th>
         <th>Creator</th>
-        <th>Actions</th>
+
+        <% if current_user&.admin? %>
+          <th>Actions</th>
+        <% end %>
       </tr>
     </thead>
 
@@ -52,23 +55,25 @@
           <td><%= event.venue.name %></td>
           <td><%= event.creator.name %></td>
 
-          <td>
-            <div class="d-flex gap-2">
-              <% if policy(event).edit? %>
-                <%= link_to "Edit",
-                    edit_event_path(event),
-                    class: "btn btn-sm btn-secondary" %>
-              <% end %>
+          <% if current_user&.admin? %>
+            <td>
+              <div class="d-flex gap-2">
+                <% if policy(event).edit? %>
+                  <%= link_to "Edit",
+                      edit_event_path(event),
+                      class: "btn btn-sm btn-secondary" %>
+                <% end %>
 
-              <% if policy(event).destroy? %>
-                <%= button_to "Delete",
-                    event_path(event),
-                    method: :delete,
-                    form: { data: { turbo_confirm: "Are you sure?" } },
-                    class: "btn btn-sm btn-danger" %>
-              <% end %>
-            </div>
-          </td>
+                <% if policy(event).destroy? %>
+                  <%= button_to "Delete",
+                      event_path(event),
+                      method: :delete,
+                      form: { data: { turbo_confirm: "Are you sure?" } },
+                      class: "btn btn-sm btn-danger" %>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

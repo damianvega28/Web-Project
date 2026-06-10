@@ -10,12 +10,21 @@ class Review < ApplicationRecord
                      }
 
   validates :comment, presence: true
-  validates :user_id, uniqueness: { scope: :event_id }
 
+  validate :only_one_review_per_person
   validate :event_must_be_completed
   validate :user_must_have_confirmed_registration
 
   private
+
+  def only_one_review_per_person
+    return unless user.present? && event.present?
+
+    existing_review = Review.find_by(user: user, event: event)
+    return if existing_review.blank? || existing_review == self
+
+    errors.add(:base, "Only one review per person")
+  end
 
   def event_must_be_completed
     return if event.present? && event.completed?
