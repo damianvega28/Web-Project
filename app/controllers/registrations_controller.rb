@@ -16,15 +16,35 @@ class RegistrationsController < ApplicationController
   end
 
   def create
-    @registration = Registration.new(registration_params)
-    @registration.user = current_user
+    event = Event.find(registration_params[:event_id])
+
+    @registration = Registration.find_by(user: current_user, event: event)
+
+    if @registration.present? && !@registration.cancelled?
+      redirect_to event_path(event), alert: "You are already registered for this event."
+      return
+    end
+
+    if @registration.present? && @registration.cancelled?
+      @registration.assign_attributes(
+        status: registration_status_for(event),
+        registered_at: Time.current
+      )
+    else
+      @registration = Registration.new(
+        event: event,
+        user: current_user,
+        status: registration_status_for(event),
+        registered_at: Time.current
+      )
+    end
 
     authorize @registration
 
     if @registration.save
-      redirect_to event_path(@registration.event), notice: "Registration was successfully created."
+      redirect_to event_path(event), notice: "Registration was successfully created."
     else
-      redirect_to event_path(@registration.event), alert: @registration.errors.full_messages.to_sentence
+      redirect_to event_path(event), alert: @registration.errors.full_messages.to_sentence
     end
   end
 
@@ -59,5 +79,9 @@ class RegistrationsController < ApplicationController
 
   def registration_params
     params.require(:registration).permit(policy(@registration || Registration).permitted_attributes)
+  end
+
+  def registration_status_for(event)
+    event.available_spots.positive? ? "confirmed" : "waiting_list"
   end
 end

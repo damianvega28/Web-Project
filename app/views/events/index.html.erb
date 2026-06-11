@@ -41,16 +41,25 @@
           when "ongoing"    then "bg-primary"
           when "completed"  then "bg-dark"
           when "cancelled"  then "bg-danger"
+          else "bg-secondary"
           end
         %>
 
         <tr>
           <td><%= link_to event.title, event_path(event) %></td>
-          <td><%= truncate(strip_tags(event.description.to_s), length: 80) %></td>
+
+          <td>
+            <%= truncate(event.description&.to_plain_text.to_s, length: 80) %>
+          </td>
+
           <td><%= event.start_date.strftime("%B %d, %Y %H:%M") %></td>
           <td><%= event.end_date.strftime("%B %d, %Y %H:%M") %></td>
           <td><%= event.capacity %></td>
-          <td><span class="badge <%= badge_class %>"><%= event.status.humanize %></span></td>
+          <td>
+            <span class="badge <%= badge_class %>">
+              <%= event.status.humanize %>
+            </span>
+          </td>
           <td><%= event.category.name %></td>
           <td><%= event.venue.name %></td>
           <td><%= event.creator.name %></td>
